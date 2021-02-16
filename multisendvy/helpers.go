@@ -104,6 +104,19 @@ func getEncodedAmounts(amounts [100]float64) ([]byte, *big.Int) {
 	return paddedAmounts, etherValue
 }
 
+func getEncodedWeiAmounts(amounts [100]string) ([]byte, *big.Int) {
+	paddedAmounts := []byte{}
+	etherValue := new(big.Int)
+	for _, weiValue := range amounts {
+		_value := new(big.Int)
+		_value.SetString(weiValue, 10)
+		etherValue.Add(etherValue, _value)
+		paddedAmount := common.LeftPadBytes(_value.Bytes(), 32)
+		paddedAmounts = append(paddedAmounts, paddedAmount...)
+	}
+	return paddedAmounts, etherValue
+}
+
 func getMethodID(methodABI []byte) []byte {
 	hash := sha3.NewLegacyKeccak256()
 	hash.Write(methodABI)
